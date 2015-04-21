@@ -1,0 +1,30 @@
+<span class="title" data-ng-init="init()">Activity</span>
+
+<div ng-model="timeRange" ng-init="timeRange = 14" class="date-range-button-group">
+  <button ng-click="timeRange = 14">14 Days</button>
+  <button ng-click="timeRange = 7">7 Days</button>
+  <button ng-click="timeRange = 3">3 Days</button>
+  <button ng-click="timeRange = 1">Today</button>
+</div>
+
+<svg></svg>
+
+<div ng-model="lineType" ng-init="lineType = 'trend'" class="graph-style-button-group">
+  <button ng-click="lineType = 'trend'">Trend Line</button>
+  <button ng-click="lineType = 'mean'">Mean Line</button>
+</div>
+
+<div ng-model="segment" ng-init="segment.gender = 'all'" class="segments">
+  <div><span class="title">Segments</span></div>
+  <div><a ng-click="segment.gender = 'all'">All</a> <span>{{segment.genderCount.male + segment.genderCount.female}}</span></div>
+  <div><a ng-click="segment.gender = 'male'">Male</a> <span>{{segment.genderCount.male}}</span></div>
+  <div><a ng-click="segment.gender = 'female'">Female</a> <span>{{segment.genderCount.female}}</span></div>
+</div>
+
+<div class="devices">
+  <span class="title">Devices</span>
+  <div id="pieChart"></div>
+</div>
+
+<button ng-click="renderCharts(parsedData)">test</button>
+

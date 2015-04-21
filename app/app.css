@@ -1,0 +1,66 @@
+body, button {
+  font-family: 'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Tahoma, sans-serif;
+}
+
+button {
+  border: 2px solid lightgray;
+  border-radius: 5px;
+  margin-right: 2px;
+}
+
+.date-range-button-group, .graph-style-button-group {
+  float: right;
+}
+
+.date-range-button-group button {
+  background-color: RGB(239, 239, 239);
+  float: right;
+  width: 6em;
+}
+
+.graph-style-button-group {
+  width: 100%;
+}
+
+.graph-style-button-group button {
+  background-color: RGB(217, 234, 211);
+  float: right;
+  width: 8em;
+}
+
+.segments, .devices {
+  display: inline-block;
+  vertical-align: top;
+  width: 49%;
+}
+
+.segments a {
+  width: 4em;
+  display: inline-block;
+}
+
+svg {
+  width: 100%;
+}
+
+.title {
+  font-size: 1.5em;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: darkgray;
+  stroke-width: 2px;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 2px;
+}

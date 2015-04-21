@@ -28,6 +28,22 @@ button {
   width: 8em;
 }
 
+.p2_segmentMainLabel-outer {
+  width: 20px;
+}
+
+#p2_segmentMainLabel0-outer {
+  background-color: RGB(201, 218, 248);
+}
+
+#p2_segmentMainLabel1-outer {
+  background-color: RGB(234, 208, 220);
+}
+
+#p2_segmentMainLabel2-outer {
+  background-color: RGB(252, 229, 204);
+}
+
 .segments, .devices {
   display: inline-block;
   vertical-align: top;
@@ -35,8 +51,8 @@ button {
 }
 
 .segments a {
-  width: 4em;
   display: inline-block;
+  width: 5em;
 }
 
 svg {
@@ -50,7 +66,7 @@ svg {
 .axis path,
 .axis line {
   fill: none;
-  stroke: darkgray;
+  stroke: RGB(102, 102, 102);
   stroke-width: 2px;
   shape-rendering: crispEdges;
 }

@@ -82,7 +82,8 @@ angular.module('myApp.view1', ['ngRoute'])
                       parseDate = d3.time.format("%x").parse,
                       filteredData = _.filter(data, function (element) {
                         var inTimeRange = today - new Date(element.Date + " " + element.Time) < scope.timeRange * 86400000;
-                        return inTimeRange && scope.segment.gender === "all" || scope.segment.gender === element[2];
+                        debugger;
+                        return inTimeRange && scope.segment.gender === "all" || scope.segment.gender === element.Gender;
                       });
               scope.segment.genderCount = _.countBy(filteredData, function (element) {
                 return element.Gender;
@@ -99,6 +100,7 @@ angular.module('myApp.view1', ['ngRoute'])
               return _.sortBy(output, function (element) {
                 return element.Date;
               });
+              // if trend line, do not count by, sort by Date + Time
             };
             /*
              * on load
@@ -113,13 +115,14 @@ angular.module('myApp.view1', ['ngRoute'])
               d3.csv("SampleData.csv", function (data) {
                 $scope.parsedData = data;
               });
+              $scope.renderCharts($scope.parsedData, $scope);
             };
 
             $scope.renderCharts = function (data) {
               var chartData = filterData(data, $scope);
               var margin = {top: 20, right: 20, bottom: 30, left: 50},
               width = 960 - margin.left - margin.right,
-                      height = 500 - margin.top - margin.bottom;
+                      height = 300 - margin.top - margin.bottom;
 
               var x = d3.time.scale()
                       .range([0, width]);
@@ -143,6 +146,8 @@ angular.module('myApp.view1', ['ngRoute'])
                         return y(d.Activity);
                       });
 
+              d3.select("svg").html("");
+
               var svg = d3.select("svg")
                       .attr("width", width + margin.left + margin.right)
                       .attr("height", height + margin.top + margin.bottom)
@@ -157,12 +162,12 @@ angular.module('myApp.view1', ['ngRoute'])
               }));
 
               svg.append("g")
-                      .attr("class", "x axis")
+                      .attr("class", "x-axis")
                       .attr("transform", "translate(0," + height + ")")
                       .call(xAxis);
 
               svg.append("g")
-                      .attr("class", "y axis")
+                      .attr("class", "y-axis")
                       .call(yAxis)
                       .append("text")
                       .attr("transform", "rotate(-90)")
@@ -183,5 +188,13 @@ angular.module('myApp.view1', ['ngRoute'])
 
               pie && pie.destroy();
               pie = new d3pie("pieChart", pieParams);
+            });
+
+            $scope.$watch("timeRange", function (newvalue, oldvalue, scope) {
+              $scope.renderCharts($scope.parsedData, $scope);
+            });
+
+            $scope.$watch("segment.gender", function (newvalue, oldvalue, scope) {
+              $scope.renderCharts($scope.parsedData, $scope);
             });
 }]);

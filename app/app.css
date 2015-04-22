@@ -1,4 +1,5 @@
 body, button {
+  box-sizing: border-box;
   font-family: 'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Tahoma, sans-serif;
 }
 
@@ -16,6 +17,10 @@ button {
   background-color: RGB(239, 239, 239);
   float: right;
   width: 6em;
+}
+
+.devices .title {
+  text-align: center;
 }
 
 .graph-style-button-group {
@@ -44,15 +49,28 @@ button {
   background-color: RGB(252, 229, 204);
 }
 
+#pieChart {
+  margin: 0 auto;
+  width: 400px;
+}
+
+.pieContainer {
+}
+
 .segments, .devices {
   display: inline-block;
+  margin-top: 40px;
   vertical-align: top;
   width: 49%;
 }
 
 .segments a {
   display: inline-block;
-  width: 5em;
+  width: 100px;
+}
+
+.segments .all {
+  font-size: 1.25em;
 }
 
 svg {
@@ -78,5 +96,11 @@ svg {
 .line {
   fill: none;
   stroke: steelblue;
+  stroke-width: 2px;
+}
+
+.x-axis, .y-axis {
+  fill: none;
+  stroke: RGB(102, 102, 102);
   stroke-width: 2px;
 }

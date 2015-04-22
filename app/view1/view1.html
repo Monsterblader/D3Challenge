@@ -16,12 +16,14 @@
 
 <div ng-model="segment" ng-init="segment.gender = 'all'" class="segments">
   <div><span class="title">Segments</span></div>
-  <div><a ng-click="setGender('all')">All</a> <span>{{segment.genderCount.male + segment.genderCount.female}}</span></div>
+  <div class="all"><a ng-click="setGender('all')">All</a> <span>{{segment.genderCount.male + segment.genderCount.female}}</span></div>
   <div><a ng-click="setGender('male')">Male</a> <span>{{segment.genderCount.male}}</span></div>
   <div><a ng-click="setGender('female')">Female</a> <span>{{segment.genderCount.female}}</span></div>
 </div>
 
 <div class="devices">
-  <span class="title">Devices</span>
-  <div id="pieChart"></div>
+  <div class="title">Devices</div>
+  <div class="pieContainer">
+    <div id="pieChart"></div>
+  </div>
 </div>

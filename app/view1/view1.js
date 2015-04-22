@@ -9,7 +9,6 @@ angular.module('myApp.view1', ['ngRoute'])
   });
 }])
 
-// TODO remove descriptions from axes.
 // TODO always show all segments
 // TODO mean line and trend line
 // TODO color category names on pie chart
@@ -97,24 +96,22 @@ angular.module('myApp.view1', ['ngRoute'])
           scope.devices = _.countBy(filteredData, function (element) {
             return element.Device;
           });
-          if ($scope.lineType === "mean") {
-            filteredData = _.countBy(filteredData, function (element) {
-              return element.Date;
-            });
-            for (var key in filteredData) {
-              output.push({Date: parseDate(key), Activity: filteredData[key] / data.length * 100});
-            }
+          filteredData = _.countBy(filteredData, function (element) {
+            return element.Date;
+          });
+          for (var key in filteredData) {
+            output.push({Date: parseDate(key), Activity: filteredData[key] / data.length * 100});
           }
           return _.sortBy(output, function (element) {
             return element.Date;
           });
-          // if trend line, do not count by, sort by Date + Time
         };
 
         $scope.init = function () {
         };
 
         $scope.renderCharts = function (data) {
+          $scope.trendData = [];
           var chartData = filterData(data, $scope);
           var margin = {top: 20, right: 20, bottom: 30, left: 50},
           width = 960 - margin.left - margin.right,
@@ -126,6 +123,7 @@ angular.module('myApp.view1', ['ngRoute'])
           var y = d3.scale.linear()
               .range([height, 0]);
 
+// For rendering labeled axes
 //          var xAxis = d3.svg.axis()
 //              .scale(x)
 //              .orient("bottom");
@@ -134,21 +132,38 @@ angular.module('myApp.view1', ['ngRoute'])
 //              .scale(y)
 //              .orient("left");
 
-          var line = d3.svg.line()
+          var meanLine = d3.svg.line()
               .x(function (d) {
+                $scope.trendData.push({x: x(d.Date), y: y(d.Activity)});
                 return x(d.Date);
               })
               .y(function (d) {
                 return y(d.Activity);
               });
 
-          var makeAxis = d3.svg.line()
+          var line = d3.svg.line()
               .x(function (d) {
                 return d.x;
               })
               .y(function (d) {
                 return d.y;
               });
+
+          var calcTrend = function (data) {
+            var l = data.length,
+                x1 = 0, x2 = 0, xy = 0, y1 = 0, y2 = 0, a, b;
+
+            for (var i = l - 1; i >= 0; i -= 1) {
+              x1 += data[i].x;
+              x2 += data[i].x ^ 2;
+              xy += data[i].x * data[i].y;
+              y1 += data[i].y;
+              y2 += data[i].y ^ 2;
+            }
+            b = (l * xy - x1 * y1) / (l * x2 - x1 * x1);
+            a = 1 / l * y1 - b / l * x1;
+            return {a: a, b: b};
+          };
 
           d3.select("svg").html("");
 
@@ -165,11 +180,13 @@ angular.module('myApp.view1', ['ngRoute'])
             return d.Activity;
           }));
 
+// Render the mean line.
           svg.append("path")
               .datum(chartData)
               .attr("class", "line")
-              .attr("d", line);
+              .attr("d", meanLine);
 
+// Render labeled axes
 //          svg.append("g")
 //              .attr("class", "x-axis")
 //              .attr("transform", "translate(0," + height + ")")
@@ -184,13 +201,22 @@ angular.module('myApp.view1', ['ngRoute'])
 //              .attr("dy", ".71em")
 //              .style("text-anchor", "end");
 
+// Render plain axes.
           svg.append('path')
-              .attr('d', makeAxis([{x: -10, y: -10}, {x: -10, y: 265}]))
+              .attr('d', line([{x: -10, y: -10}, {x: -10, y: 265}]))
               .classed('y-axis', true);
 
           svg.append('path')
-              .attr('d', makeAxis([{x: 0, y: 275}, {x: 940, y: 275}]))
+              .attr('d', line([{x: 0, y: 275}, {x: 940, y: 275}]))
               .classed('x-axis', true);
+
+// Render the trend line.
+          $scope.trendFormula = calcTrend($scope.trendData);
+
+          svg.append('path')
+              .attr('d', line([{x: 0, y: height - $scope.trendFormula.a},
+                {x: width, y: height - ($scope.trendFormula.a + $scope.trendFormula.b * width)}]))
+              .classed({'line': true, 'trendLine': true});
         };
 
         $scope.renderPie = function (scope) {

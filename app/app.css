@@ -99,6 +99,10 @@ svg {
   stroke-width: 2px;
 }
 
+.trendLine {
+  stroke: red;
+}
+
 .x-axis, .y-axis {
   fill: none;
   stroke: RGB(102, 102, 102);

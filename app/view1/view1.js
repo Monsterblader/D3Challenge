@@ -107,9 +107,6 @@ angular.module('myApp.view1', ['ngRoute'])
           });
         };
 
-        $scope.init = function () {
-        };
-
         $scope.renderCharts = function (data) {
           $scope.trendData = [];
           var chartData = filterData(data, $scope);
@@ -184,7 +181,8 @@ angular.module('myApp.view1', ['ngRoute'])
           svg.append("path")
               .datum(chartData)
               .attr("class", "line")
-              .attr("d", meanLine);
+              .attr("d", meanLine)
+              .classed({"meanLine": true, "line": true});
 
 // Render labeled axes
 //          svg.append("g")
@@ -216,7 +214,7 @@ angular.module('myApp.view1', ['ngRoute'])
           svg.append('path')
               .attr('d', line([{x: 0, y: height - $scope.trendFormula.a},
                 {x: width, y: height - ($scope.trendFormula.a + $scope.trendFormula.b * width)}]))
-              .classed({'line': true, 'trendLine': true});
+              .classed({'line': true, 'trendLine': true, 'hidden': true});
         };
 
         $scope.renderPie = function (scope) {
@@ -229,9 +227,13 @@ angular.module('myApp.view1', ['ngRoute'])
         };
 
         $scope.setLineType = function (type) {
-          $scope.lineType = type;
-          $scope.renderCharts($scope.parsedData, $scope);
-          $scope.renderPie($scope);
+          if (type === "mean") {
+            d3.select('.meanLine').classed('hidden', false);
+            d3.select('.trendLine').classed('hidden', true);
+          } else {
+            d3.select('.meanLine').classed('hidden', true);
+            d3.select('.trendLine').classed('hidden', false);
+          }
         };
 
         $scope.setTimeRange = function (range) {

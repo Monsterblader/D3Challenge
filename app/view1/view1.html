@@ -9,9 +9,9 @@
 
 <svg></svg>
 
-<div ng-model="lineType" ng-init="lineType = 'mean'" class="graph-style-button-group">
-  <button ng-click="lineType = 'trend'">Trend Line</button>
-  <button ng-click="lineType = 'mean'">Mean Line</button>
+<div ng-model="lineType" class="graph-style-button-group">
+  <button ng-click="setLineType('trend')">Trend Line</button>
+  <button ng-click="setLineType('mean')">Mean Line</button>
 </div>
 
 <div ng-model="segment" ng-init="segment.gender = 'all'" class="segments">

@@ -10,8 +10,11 @@
     "angular-route": "1.2.x",
     "angular-loader": "1.2.x",
     "angular-mocks": "~1.2.x",
-    "html5-boilerplate": "~4.3.0",
+    "html5-boilerplate": "~5.1.0",
     "d3pie": "~0.1.6",
     "underscore": "~1.8.3"
+  },
+  "resolutions": {
+    "html5-boilerplate": "~5.1.0"
   }
 }

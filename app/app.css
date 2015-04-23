@@ -2,6 +2,7 @@ body, button {
   box-sizing: border-box;
   font-family: 'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Tahoma, sans-serif;
   max-width: 1040px;
+  margin: 20px auto 0 auto;
 }
 
 button {

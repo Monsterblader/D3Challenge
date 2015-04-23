@@ -90,7 +90,11 @@ angular.module('myApp.view1', ['ngRoute'])
             var inTimeRange = today - new Date(element.Date + " " + element.Time) < scope.timeRange * 86400000;
             return +element.Activity && inTimeRange && scope.segment.gender === "all" || scope.segment.gender === element.Gender;
           });
-          scope.segment.genderCount = _.countBy(filteredData, function (element) {
+          var genderData = _.filter(data, function (element) {
+            var inTimeRange = today - new Date(element.Date + " " + element.Time) < scope.timeRange * 86400000;
+            return +element.Activity && inTimeRange;
+          });
+          scope.segment.genderCount = _.countBy(genderData, function (element) {
             return element.Gender;
           });
           scope.devices = _.countBy(filteredData, function (element) {
@@ -131,8 +135,12 @@ angular.module('myApp.view1', ['ngRoute'])
 
           var meanLine = d3.svg.line()
               .x(function (d) {
-                $scope.trendData.push({x: x(d.Date), y: y(d.Activity)});
-                return x(d.Date);
+                var xVal = x(d.Date);
+                // In order to render the trend line on the same scale as the
+                // mean line, the x- and y-values need to use the converted
+                // pixel values, so it is easiest to capture them here.
+                $scope.trendData.push({x: xVal, y: y(d.Activity)});
+                return xVal;
               })
               .y(function (d) {
                 return y(d.Activity);
@@ -253,6 +261,7 @@ angular.module('myApp.view1', ['ngRoute'])
             $scope.parsedData = data;
             $scope.renderCharts($scope.parsedData, $scope);
             $scope.renderPie($scope);
+            $scope.$apply();
           });
         });
 }]);

@@ -17,6 +17,7 @@ angular.module('myApp.view1', ['ngRoute'])
 // TODO implement geolocation?
     .controller('View1Ctrl', ['$scope', function ($scope) {
         $scope.parsedData = {};
+        $scope.mean = 0;
         $scope.devices = {mobile: 10, desktop: 1, tablet: 1};
         var pie;
         var pieParams = {
@@ -104,8 +105,10 @@ angular.module('myApp.view1', ['ngRoute'])
             return element.Date;
           });
           for (var key in filteredData) {
+            $scope.mean += filteredData[key];
             output.push({Date: parseDate(key), Activity: filteredData[key] / data.length * 100});
           }
+          $scope.mean /= Object.keys(filteredData).length
           return _.sortBy(output, function (element) {
             return element.Date;
           });
@@ -133,7 +136,7 @@ angular.module('myApp.view1', ['ngRoute'])
 //              .scale(y)
 //              .orient("left");
 
-          var meanLine = d3.svg.line()
+          var mainLine = d3.svg.line()
               .x(function (d) {
                 var xVal = x(d.Date);
                 // In order to render the trend line on the same scale as the
@@ -189,8 +192,8 @@ angular.module('myApp.view1', ['ngRoute'])
           svg.append("path")
               .datum(chartData)
               .attr("class", "line")
-              .attr("d", meanLine)
-              .classed({"meanLine": true, "line": true});
+              .attr("d", mainLine)
+              .classed("line", true);
 
 // Render labeled axes
 //          svg.append("g")
@@ -223,6 +226,12 @@ angular.module('myApp.view1', ['ngRoute'])
               .attr('d', line([{x: 0, y: height - $scope.trendFormula.a},
                 {x: width, y: height - ($scope.trendFormula.a + $scope.trendFormula.b * width)}]))
               .classed({'line': true, 'trendLine': true, 'hidden': true});
+
+// Render the mean line.
+          svg.append('path')
+              .attr('d', line([{x: 0, y: height - $scope.mean},
+                {x: width, y: height - $scope.mean}]))
+              .classed({'line': true, 'meanLine': true, 'hidden': true});
         };
 
         $scope.renderPie = function (scope) {
@@ -235,13 +244,9 @@ angular.module('myApp.view1', ['ngRoute'])
         };
 
         $scope.setLineType = function (type) {
-          if (type === "mean") {
-            d3.select('.meanLine').classed('hidden', false);
-            d3.select('.trendLine').classed('hidden', true);
-          } else {
-            d3.select('.meanLine').classed('hidden', true);
-            d3.select('.trendLine').classed('hidden', false);
-          }
+          var truth = d3.select(type + ".hidden")[0][0] === null;
+          d3.select(type)
+              .classed("hidden", truth);
         };
 
         $scope.setTimeRange = function (range) {
@@ -257,7 +262,7 @@ angular.module('myApp.view1', ['ngRoute'])
         };
 
         $scope.$on("$viewContentLoaded", function () {
-          d3.csv("SampleData.csv", function (data) {
+          d3.csv("app/SampleData.csv", function (data) {
             $scope.parsedData = data;
             $scope.renderCharts($scope.parsedData, $scope);
             $scope.renderPie($scope);

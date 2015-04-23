@@ -257,7 +257,7 @@ angular.module('myApp.view1', ['ngRoute'])
         };
 
         $scope.$on("$viewContentLoaded", function () {
-          d3.csv("SampleData.csv", function (data) {
+          d3.csv("app/SampleData.csv", function (data) {
             $scope.parsedData = data;
             $scope.renderCharts($scope.parsedData, $scope);
             $scope.renderPie($scope);
